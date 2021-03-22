@@ -909,28 +909,35 @@
             });
         }
 
-        // can we see the element to apply some styling?
+        /**
+         * can we see the element to apply some styling?
+         * @param {HTMLElement} el
+         * @return {boolean}
+         */
         function canSeeElementToStyle(el) {
-            var currentEl;
-            if (currentEl = animateTheFilling) {
-                a: {
-                    currentEl = el;
-                    for (var owner = el.ownerDocument, owner = owner ? owner.defaultView : {}, theStyle; currentEl && currentEl !== document;) {
-                        theStyle = owner.getComputedStyle ? owner.getComputedStyle(currentEl, null) : currentEl.style;
-                        if (!theStyle) {
-                            currentEl = true;
-                            break a;
-                        }
-                        if ('none' === theStyle.display || 'hidden' == theStyle.visibility) {
-                            currentEl = false;
-                            break a;
-                        }
-                        currentEl = currentEl.parentNode;
-                    }
-                    currentEl = currentEl === document;
-                }
+            if (!animateTheFilling) {
+                return false;
             }
-            return currentEl ? -1 !== 'email text password number tel url'.split(' ').indexOf(el.type || '') : false;
+            let owner = el.ownerDocument ? el.ownerDocument.defaultView : null;
+            /** @type {HTMLElement | HTMLDocument | null} */
+            let currentEl = el;
+            for (; ; ) {
+                if (!currentEl) {
+                    return false;
+                }
+                if (currentEl === document) {
+                    break;
+                }
+                const theStyle = owner && owner.getComputedStyle ? owner.getComputedStyle(currentEl, null) : currentEl.style;
+                if (!theStyle) {
+                    break;
+                }
+                if ('none' === theStyle.display || 'hidden' === theStyle.visibility) {
+                    return false;
+                }
+                currentEl = currentEl.parentNode;
+            }
+            return -1 !== 'email text password number tel url'.split(' ').indexOf(el.type || '');
         }
 
         // find the element for this operation
