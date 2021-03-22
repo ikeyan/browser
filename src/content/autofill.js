@@ -65,29 +65,6 @@
                 return 'string' == typeof attrVal ? attrVal : null;
             }
 
-            // has the element been fake tested?
-            function checkIfFakeTested(field, el) {
-                if (-1 === ['text', 'password'].indexOf(el.type.toLowerCase()) ||
-                    !(passwordRegEx.test(field.value) ||
-                        passwordRegEx.test(field.htmlID) || passwordRegEx.test(field.htmlName) ||
-                        passwordRegEx.test(field.placeholder) || passwordRegEx.test(field['label-tag']) ||
-                        passwordRegEx.test(field['label-data']) || passwordRegEx.test(field['label-aria']))) {
-                    return false;
-                }
-
-                if (!field.visible) {
-                    return true;
-                }
-
-                if ('password' == el.type.toLowerCase()) {
-                    return false;
-                }
-
-                var elType = el.type;
-                focusElement(el, true);
-                return elType !== el.type;
-            }
-
             // get the value of a dom element
             function getElementValue(el) {
                 switch (toLowerString(el.type)) {
@@ -317,10 +294,6 @@
                 if (el.form) {
                     field.form = getElementAttrValue(el.form, 'opid');
                 }
-
-                // START MODIFICATION
-                //addProp(field, 'fakeTested', checkIfFakeTested(field, el), false);
-                // END MODIFICATION
 
                 return field;
             });
