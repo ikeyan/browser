@@ -693,20 +693,24 @@
             delay: null
         };
 
-        // normalize the op versus the reference
+        /**
+         * normalize the op versus the reference
+         * @param {string[]} op
+         * @return {*}
+         */
         function normalizeOp(op) {
-            var thisOperation;
+            let thisOperation;
+            let thisParameters;
             if (op.hasOwnProperty('operation') && op.hasOwnProperty('parameters')) {
-                thisOperation = op.operation, op = op.parameters;
+                thisOperation = op.operation;
+                thisParameters = op.parameters;
+            } else if ('[object Array]' === Object.prototype.toString.call(op)) {
+                thisOperation = op[0];
+                thisParameters = op.splice(1);
             } else {
-                if ('[object Array]' === Object.prototype.toString.call(op)) {
-                    thisOperation = op[0],
-                        op = op.splice(1);
-                } else {
-                    return null;
-                }
+                return null;
             }
-            return thisFill.hasOwnProperty(thisOperation) ? thisFill[thisOperation].apply(this, op) : null;
+            return thisFill.hasOwnProperty(thisOperation) ? thisFill[thisOperation].apply(this, thisParameters) : null;
         }
 
         // do a fill by opid operation
