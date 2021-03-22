@@ -580,7 +580,12 @@
         return JSON.stringify(getPageDetails(document, 'oneshotUUID'));
     }
 
-    function fill(document, fillScript, undefined) {
+    /**
+     * @param {Document} document
+     * @param {AutofillScript} fillScript
+     * @return {string}
+     */
+    function fill(document, fillScript) {
         var isFirefox = navigator.userAgent.indexOf('Firefox') !== -1 || navigator.userAgent.indexOf('Gecko/') !== -1;
 
         var markTheFilling = true,
@@ -604,6 +609,9 @@
             return false;
         }
 
+        /**
+         * @param {AutofillScript} fillScript
+         */
         function doFill(fillScript) {
             var fillScriptOps,
                 theOpIds = [],
