@@ -771,25 +771,36 @@
         },
             styleTimeout = 200;
 
-        // fill an element
+        /**
+         * fill an element
+         * @param {HTMLInputElement | HTMLElement} el
+         * @param op
+         */
         function fillTheElement(el, op) {
-            var shouldCheck;
-            if (el && null !== op && void 0 !== op && !(el.disabled || el.a || el.readOnly)) {
-                switch (markTheFilling && el.form && !el.form.opfilled && (el.form.opfilled = true),
-                el.type ? el.type.toLowerCase() : null) {
+            if (el && null != op && !(el.disabled || el.a || el.readOnly)) {
+                if (markTheFilling && el.form && !el.form.opfilled) {
+                    el.form.opfilled = true;
+                }
+                switch (el.type ? el.type.toLowerCase() : null) {
                     case 'checkbox':
-                        shouldCheck = op && 1 <= op.length && checkRadioTrueOps.hasOwnProperty(op.toLowerCase()) && true === checkRadioTrueOps[op.toLowerCase()];
-                        el.checked === shouldCheck || doAllFillOperations(el, function (theEl) {
-                            theEl.checked = shouldCheck;
-                        });
+                        const shouldCheck = op && 1 <= op.length && checkRadioTrueOps.hasOwnProperty(op.toLowerCase()) && true === checkRadioTrueOps[op.toLowerCase()];
+                        if (el.checked !== shouldCheck) {
+                            doAllFillOperations(el, function (theEl) {
+                                theEl.checked = shouldCheck;
+                            });
+                        }
                         break;
                     case 'radio':
-                        true === checkRadioTrueOps[op.toLowerCase()] && el.click();
+                        if (true === checkRadioTrueOps[op.toLowerCase()]) {
+                            el.click();
+                        }
                         break;
                     default:
-                        el.value == op || doAllFillOperations(el, function (theEl) {
-                            theEl.value = op;
-                        });
+                        if (el.value != op) {
+                            doAllFillOperations(el, function (theEl) {
+                                theEl.value = op;
+                            });
+                        }
                 }
             }
         }
