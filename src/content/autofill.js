@@ -613,16 +613,22 @@
         var markTheFilling = true,
             animateTheFilling = true;
 
-        // Check if URL is not secure when the original saved one was
+        /**
+         * Check if URL is not secure when the original saved one was
+         * @param {string} savedURL
+         * @return {boolean}
+         */
         function urlNotSecure(savedURL) {
-            var passwordInputs = null;
-            if (!savedURL) {
-                return false;
+            if (savedURL && 0 === savedURL.indexOf('https://') && 'http:' === document.location.protocol) {
+                const passwordInputs = document.querySelectorAll('input[type="password"]');
+                if (0 < passwordInputs.length) {
+                    confirmResult = confirm('Warning: This is an unsecured HTTP page, and any information you submit can potentially be seen and changed by others. This Login was originally saved on a secure (HTTPS) page.\\n\\nDo you still wish to fill this login?');
+                    if (!confirmResult) {
+                        return true;
+                    }
+                }
             }
-
-            return 0 === savedURL.indexOf('https://') && 'http:' === document.location.protocol && (passwordInputs = document.querySelectorAll('input[type=password]'),
-                0 < passwordInputs.length && (confirmResult = confirm('Warning: This is an unsecured HTTP page, and any information you submit can potentially be seen and changed by others. This Login was originally saved on a secure (HTTPS) page.\\n\\nDo you still wish to fill this login?'),
-                    0 == confirmResult)) ? true : false;
+            return false;
         }
 
         function doFill(fillScript) {
