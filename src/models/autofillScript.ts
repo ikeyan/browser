@@ -1,10 +1,10 @@
 export default class AutofillScript {
     script: string[][] = [];
-    documentUUID: any = {};
-    properties: any = {};
-    options: any = {};
-    metadata: any = {};
-    autosubmit: any = null;
+    documentUUID: string;
+    properties: {delay_between_operations?: number} = {};
+    options: {} = {};
+    metadata: {} = {};
+    autosubmit: null = null;
 
     constructor(documentUUID: string) {
         this.documentUUID = documentUUID;
